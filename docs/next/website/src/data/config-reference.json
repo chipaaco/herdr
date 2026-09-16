@@ -65,6 +65,18 @@
           "description": "Override the accent color token on top of the base theme. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
         },
         {
+          "key": "theme.custom.tab_active_bg",
+          "type": "color",
+          "default": "unset",
+          "description": "Override the focused tab background. Defaults to the accent color. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
+        },
+        {
+          "key": "theme.custom.tab_active_fg",
+          "type": "color",
+          "default": "unset",
+          "description": "Override the focused tab label color. Defaults to the panel contrast color. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
+        },
+        {
           "key": "theme.custom.panel_bg",
           "type": "color",
           "default": "unset",
@@ -105,6 +117,12 @@
           "type": "color",
           "default": "unset",
           "description": "Override the surface_dim color token on top of the base theme. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
+        },
+        {
+          "key": "theme.custom.divider",
+          "type": "color",
+          "default": "unset",
+          "description": "Override the sidebar separator and section-rule color. Defaults to surface_dim. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
         },
         {
           "key": "theme.custom.overlay0",
@@ -179,6 +197,18 @@
           "description": "Override the accent color token when auto_switch selects a light appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
         },
         {
+          "key": "theme.custom.light.tab_active_bg",
+          "type": "color",
+          "default": "unset",
+          "description": "Override the focused tab background when auto_switch selects a light appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
+        },
+        {
+          "key": "theme.custom.light.tab_active_fg",
+          "type": "color",
+          "default": "unset",
+          "description": "Override the focused tab label color when auto_switch selects a light appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
+        },
+        {
           "key": "theme.custom.light.panel_bg",
           "type": "color",
           "default": "unset",
@@ -219,6 +249,12 @@
           "type": "color",
           "default": "unset",
           "description": "Override the surface_dim color token when auto_switch selects a light appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
+        },
+        {
+          "key": "theme.custom.light.divider",
+          "type": "color",
+          "default": "unset",
+          "description": "Override the sidebar separator and section-rule color when auto_switch selects a light appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
         },
         {
           "key": "theme.custom.light.overlay0",
@@ -293,6 +329,18 @@
           "description": "Override the accent color token when auto_switch selects a dark appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
         },
         {
+          "key": "theme.custom.dark.tab_active_bg",
+          "type": "color",
+          "default": "unset",
+          "description": "Override the focused tab background when auto_switch selects a dark appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
+        },
+        {
+          "key": "theme.custom.dark.tab_active_fg",
+          "type": "color",
+          "default": "unset",
+          "description": "Override the focused tab label color when auto_switch selects a dark appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
+        },
+        {
           "key": "theme.custom.dark.panel_bg",
           "type": "color",
           "default": "unset",
@@ -333,6 +381,12 @@
           "type": "color",
           "default": "unset",
           "description": "Override the surface_dim color token when auto_switch selects a dark appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
+        },
+        {
+          "key": "theme.custom.dark.divider",
+          "type": "color",
+          "default": "unset",
+          "description": "Override the sidebar separator and section-rule color when auto_switch selects a dark appearance. Applied after theme.custom. Accepts hex, named colors, rgb(r,g,b), or reset aliases."
         },
         {
           "key": "theme.custom.dark.overlay0",

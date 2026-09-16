@@ -35,6 +35,10 @@ use crate::workspace::Workspace;
 pub struct Palette {
     /// Primary accent (highlight, active borders).
     pub accent: Color,
+    /// Background for the focused tab label. Falls back to `accent`.
+    pub tab_active_bg: Option<Color>,
+    /// Foreground for the focused tab label. Falls back to the panel contrast color.
+    pub tab_active_fg: Option<Color>,
     /// Background for the tab bar, floating panels, overlays, and modals.
     pub panel_bg: Color,
     /// Optional desktop sidebar background. Reset preserves the terminal background.
@@ -49,6 +53,8 @@ pub struct Palette {
     pub surface1: Color,
     /// Very dim surface for separators.
     pub surface_dim: Color,
+    /// Color for sidebar separators and section rules. Falls back to `surface_dim`.
+    pub divider: Option<Color>,
     /// Muted text (secondary info, numbers).
     pub overlay0: Color,
     /// Slightly brighter overlay text.
@@ -74,9 +80,29 @@ pub struct Palette {
 }
 
 impl Palette {
+    /// Background for the focused tab label.
+    pub fn tab_bg_color(&self) -> Color {
+        self.tab_active_bg.unwrap_or(self.accent)
+    }
+
+    /// Foreground for the focused tab label.
+    pub fn tab_fg_color(&self) -> Color {
+        self.tab_active_fg.unwrap_or(match self.panel_bg {
+            Color::Reset => self.surface_dim,
+            color => color,
+        })
+    }
+
+    /// Color for sidebar separators and section rules.
+    pub fn divider_color(&self) -> Color {
+        self.divider.unwrap_or(self.surface_dim)
+    }
+
     /// Catppuccin Mocha — the default.
     pub fn catppuccin() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(137, 180, 250), // blue
             panel_bg: Color::Rgb(24, 24, 37),
             sidebar_bg: Color::Reset,
@@ -85,6 +111,7 @@ impl Palette {
             surface0: Color::Rgb(49, 50, 68),
             surface1: Color::Rgb(69, 71, 90),
             surface_dim: Color::Rgb(30, 30, 46),
+            divider: None,
             overlay0: Color::Rgb(108, 112, 134),
             overlay1: Color::Rgb(127, 132, 156),
             text: Color::Rgb(205, 214, 244),
@@ -102,6 +129,8 @@ impl Palette {
     /// Catppuccin Latte — the light Catppuccin flavor.
     pub fn catppuccin_latte() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(30, 102, 245),
             panel_bg: Color::Rgb(239, 241, 245),
             sidebar_bg: Color::Reset,
@@ -110,6 +139,7 @@ impl Palette {
             surface0: Color::Rgb(204, 208, 218),
             surface1: Color::Rgb(188, 192, 204),
             surface_dim: Color::Rgb(230, 233, 239),
+            divider: None,
             overlay0: Color::Rgb(156, 160, 176),
             overlay1: Color::Rgb(140, 143, 161),
             text: Color::Rgb(76, 79, 105),
@@ -127,6 +157,8 @@ impl Palette {
     /// Terminal 16-color theme.
     pub fn terminal() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Blue,
             panel_bg: Color::Reset,
             sidebar_bg: Color::Reset,
@@ -135,6 +167,7 @@ impl Palette {
             surface0: Color::Reset,
             surface1: Color::DarkGray,
             surface_dim: Color::DarkGray,
+            divider: None,
             overlay0: Color::Gray,
             overlay1: Color::White,
             text: Color::Reset,
@@ -152,6 +185,8 @@ impl Palette {
     /// Tokyo Night — blue-purple aesthetic.
     pub fn tokyo_night() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(122, 162, 247), // blue
             panel_bg: Color::Rgb(26, 27, 38),
             sidebar_bg: Color::Reset,
@@ -160,6 +195,7 @@ impl Palette {
             surface0: Color::Rgb(36, 40, 59),
             surface1: Color::Rgb(65, 72, 104),
             surface_dim: Color::Rgb(26, 27, 38),
+            divider: None,
             overlay0: Color::Rgb(86, 95, 137),
             overlay1: Color::Rgb(105, 113, 150),
             text: Color::Rgb(192, 202, 245),
@@ -177,6 +213,8 @@ impl Palette {
     /// Tokyo Night Day — the light Tokyo Night style.
     pub fn tokyo_night_day() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(46, 125, 233),
             panel_bg: Color::Rgb(225, 226, 231),
             sidebar_bg: Color::Reset,
@@ -185,6 +223,7 @@ impl Palette {
             surface0: Color::Rgb(196, 200, 218),
             surface1: Color::Rgb(168, 174, 203),
             surface_dim: Color::Rgb(210, 211, 218),
+            divider: None,
             overlay0: Color::Rgb(137, 144, 179),
             overlay1: Color::Rgb(104, 112, 154),
             text: Color::Rgb(55, 96, 191),
@@ -202,6 +241,8 @@ impl Palette {
     /// Dracula — purple/pink/green.
     pub fn dracula() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(189, 147, 249), // purple
             panel_bg: Color::Rgb(40, 42, 54),
             sidebar_bg: Color::Reset,
@@ -210,6 +251,7 @@ impl Palette {
             surface0: Color::Rgb(68, 71, 90),
             surface1: Color::Rgb(98, 114, 164),
             surface_dim: Color::Rgb(40, 42, 54),
+            divider: None,
             overlay0: Color::Rgb(98, 114, 164),
             overlay1: Color::Rgb(130, 140, 180),
             text: Color::Rgb(248, 248, 242),
@@ -227,6 +269,8 @@ impl Palette {
     /// Nord — frosty blue palette.
     pub fn nord() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(136, 192, 208), // frost
             panel_bg: Color::Rgb(46, 52, 64),
             sidebar_bg: Color::Reset,
@@ -235,6 +279,7 @@ impl Palette {
             surface0: Color::Rgb(59, 66, 82),
             surface1: Color::Rgb(67, 76, 94),
             surface_dim: Color::Rgb(46, 52, 64),
+            divider: None,
             overlay0: Color::Rgb(76, 86, 106),
             overlay1: Color::Rgb(100, 110, 130),
             text: Color::Rgb(236, 239, 244),
@@ -252,6 +297,8 @@ impl Palette {
     /// Gruvbox Dark — warm retro palette.
     pub fn gruvbox() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(215, 153, 33), // yellow
             panel_bg: Color::Rgb(40, 40, 40),
             sidebar_bg: Color::Reset,
@@ -260,6 +307,7 @@ impl Palette {
             surface0: Color::Rgb(60, 56, 54),
             surface1: Color::Rgb(80, 73, 69),
             surface_dim: Color::Rgb(40, 40, 40),
+            divider: None,
             overlay0: Color::Rgb(146, 131, 116),
             overlay1: Color::Rgb(168, 153, 132),
             text: Color::Rgb(235, 219, 178),
@@ -277,6 +325,8 @@ impl Palette {
     /// Gruvbox Light — the light retro palette.
     pub fn gruvbox_light() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(7, 102, 120),
             panel_bg: Color::Rgb(251, 241, 199),
             sidebar_bg: Color::Reset,
@@ -285,6 +335,7 @@ impl Palette {
             surface0: Color::Rgb(235, 219, 178),
             surface1: Color::Rgb(213, 196, 161),
             surface_dim: Color::Rgb(242, 229, 188),
+            divider: None,
             overlay0: Color::Rgb(146, 131, 116),
             overlay1: Color::Rgb(124, 111, 100),
             text: Color::Rgb(60, 56, 54),
@@ -302,6 +353,8 @@ impl Palette {
     /// One Dark — Atom's classic dark theme.
     pub fn one_dark() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(97, 175, 239), // blue
             panel_bg: Color::Rgb(40, 44, 52),
             sidebar_bg: Color::Reset,
@@ -310,6 +363,7 @@ impl Palette {
             surface0: Color::Rgb(44, 49, 58),
             surface1: Color::Rgb(62, 68, 81),
             surface_dim: Color::Rgb(40, 44, 52),
+            divider: None,
             overlay0: Color::Rgb(92, 99, 112),
             overlay1: Color::Rgb(115, 122, 135),
             text: Color::Rgb(171, 178, 191),
@@ -327,6 +381,8 @@ impl Palette {
     /// One Light — Atom's classic light theme.
     pub fn one_light() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(64, 120, 242),
             panel_bg: Color::Rgb(250, 250, 250),
             sidebar_bg: Color::Reset,
@@ -335,6 +391,7 @@ impl Palette {
             surface0: Color::Rgb(240, 240, 241),
             surface1: Color::Rgb(229, 229, 230),
             surface_dim: Color::Rgb(245, 245, 246),
+            divider: None,
             overlay0: Color::Rgb(160, 161, 167),
             overlay1: Color::Rgb(104, 107, 119),
             text: Color::Rgb(56, 58, 66),
@@ -352,6 +409,8 @@ impl Palette {
     /// Solarized Dark — Ethan Schoonover's classic.
     pub fn solarized() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(38, 139, 210), // blue
             panel_bg: Color::Rgb(0, 43, 54),
             sidebar_bg: Color::Reset,
@@ -360,6 +419,7 @@ impl Palette {
             surface0: Color::Rgb(7, 54, 66),
             surface1: Color::Rgb(88, 110, 117),
             surface_dim: Color::Rgb(0, 43, 54),
+            divider: None,
             overlay0: Color::Rgb(88, 110, 117),
             overlay1: Color::Rgb(101, 123, 131),
             text: Color::Rgb(147, 161, 161),
@@ -377,6 +437,8 @@ impl Palette {
     /// Solarized Light — Ethan Schoonover's light variant.
     pub fn solarized_light() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(38, 139, 210),
             panel_bg: Color::Rgb(253, 246, 227),
             sidebar_bg: Color::Reset,
@@ -385,6 +447,7 @@ impl Palette {
             surface0: Color::Rgb(238, 232, 213),
             surface1: Color::Rgb(147, 161, 161),
             surface_dim: Color::Rgb(238, 232, 213),
+            divider: None,
             overlay0: Color::Rgb(147, 161, 161),
             overlay1: Color::Rgb(88, 110, 117),
             text: Color::Rgb(101, 123, 131),
@@ -402,6 +465,8 @@ impl Palette {
     /// Kanagawa — inspired by Katsushika Hokusai.
     pub fn kanagawa() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(126, 156, 216), // blue
             panel_bg: Color::Rgb(31, 31, 40),
             sidebar_bg: Color::Reset,
@@ -410,6 +475,7 @@ impl Palette {
             surface0: Color::Rgb(42, 42, 55),
             surface1: Color::Rgb(54, 54, 70),
             surface_dim: Color::Rgb(31, 31, 40),
+            divider: None,
             overlay0: Color::Rgb(114, 113, 105),
             overlay1: Color::Rgb(135, 134, 125),
             text: Color::Rgb(220, 215, 186),
@@ -427,6 +493,8 @@ impl Palette {
     /// Kanagawa Lotus — the light Kanagawa variant.
     pub fn kanagawa_lotus() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(77, 105, 155),
             panel_bg: Color::Rgb(242, 236, 188),
             sidebar_bg: Color::Reset,
@@ -435,6 +503,7 @@ impl Palette {
             surface0: Color::Rgb(220, 213, 172),
             surface1: Color::Rgb(201, 203, 209),
             surface_dim: Color::Rgb(213, 206, 163),
+            divider: None,
             overlay0: Color::Rgb(160, 156, 172),
             overlay1: Color::Rgb(138, 137, 128),
             text: Color::Rgb(84, 84, 100),
@@ -452,6 +521,8 @@ impl Palette {
     /// Rosé Pine — muted, elegant.
     pub fn rose_pine() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(196, 167, 231), // iris
             panel_bg: Color::Rgb(25, 23, 36),
             sidebar_bg: Color::Reset,
@@ -460,6 +531,7 @@ impl Palette {
             surface0: Color::Rgb(31, 29, 46),
             surface1: Color::Rgb(38, 35, 58),
             surface_dim: Color::Rgb(38, 35, 58),
+            divider: None,
             overlay0: Color::Rgb(110, 106, 134),
             overlay1: Color::Rgb(144, 140, 170),
             text: Color::Rgb(224, 222, 244),
@@ -477,6 +549,8 @@ impl Palette {
     /// Rosé Pine Dawn — the light Rosé Pine variant.
     pub fn rose_pine_dawn() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(144, 122, 169),
             panel_bg: Color::Rgb(250, 244, 237),
             sidebar_bg: Color::Reset,
@@ -485,6 +559,7 @@ impl Palette {
             surface0: Color::Rgb(242, 233, 225),
             surface1: Color::Rgb(255, 250, 243),
             surface_dim: Color::Rgb(242, 233, 225),
+            divider: None,
             overlay0: Color::Rgb(152, 147, 165),
             overlay1: Color::Rgb(121, 117, 147),
             text: Color::Rgb(70, 66, 97),
@@ -502,6 +577,8 @@ impl Palette {
     /// Vesper — minimal high-contrast monochrome with peach and mint accents.
     pub fn vesper() -> Self {
         Self {
+            tab_active_bg: None,
+            tab_active_fg: None,
             accent: Color::Rgb(255, 199, 153),
             panel_bg: Color::Rgb(26, 26, 26),
             sidebar_bg: Color::Reset,
@@ -510,6 +587,7 @@ impl Palette {
             surface0: Color::Rgb(35, 35, 35),
             surface1: Color::Rgb(40, 40, 40),
             surface_dim: Color::Rgb(16, 16, 16),
+            divider: None,
             overlay0: Color::Rgb(92, 92, 92),
             overlay1: Color::Rgb(126, 126, 126),
             text: Color::Rgb(255, 255, 255),
@@ -555,6 +633,12 @@ impl Palette {
         if let Some(c) = &custom.accent {
             self.accent = parse_color(c);
         }
+        if let Some(c) = &custom.tab_active_bg {
+            self.tab_active_bg = Some(parse_color(c));
+        }
+        if let Some(c) = &custom.tab_active_fg {
+            self.tab_active_fg = Some(parse_color(c));
+        }
         if let Some(c) = &custom.panel_bg {
             self.panel_bg = parse_color(c);
         }
@@ -575,6 +659,9 @@ impl Palette {
         }
         if let Some(c) = &custom.surface_dim {
             self.surface_dim = parse_color(c);
+        }
+        if let Some(c) = &custom.divider {
+            self.divider = Some(parse_color(c));
         }
         if let Some(c) = &custom.overlay0 {
             self.overlay0 = parse_color(c);
@@ -617,6 +704,12 @@ impl Palette {
         if let Some(c) = &custom.accent {
             self.accent = parse_color(c);
         }
+        if let Some(c) = &custom.tab_active_bg {
+            self.tab_active_bg = Some(parse_color(c));
+        }
+        if let Some(c) = &custom.tab_active_fg {
+            self.tab_active_fg = Some(parse_color(c));
+        }
         if let Some(c) = &custom.panel_bg {
             self.panel_bg = parse_color(c);
         }
@@ -637,6 +730,9 @@ impl Palette {
         }
         if let Some(c) = &custom.surface_dim {
             self.surface_dim = parse_color(c);
+        }
+        if let Some(c) = &custom.divider {
+            self.divider = Some(parse_color(c));
         }
         if let Some(c) = &custom.overlay0 {
             self.overlay0 = parse_color(c);
@@ -1463,6 +1559,30 @@ mod tests {
         assert_eq!(palette.sidebar_bg, Color::Rgb(24, 24, 37));
         assert_eq!(palette.active_row_bg, Color::Rgb(49, 50, 68));
         assert_eq!(palette.selection_bg, Color::Rgb(69, 71, 90));
+    }
+
+    #[test]
+    fn custom_chrome_colors_override_the_defaults() {
+        let custom = crate::config::CustomThemeColors {
+            tab_active_bg: Some("#101112".to_string()),
+            tab_active_fg: Some("#131415".to_string()),
+            divider: Some("#161718".to_string()),
+            ..Default::default()
+        };
+        let palette = Palette::catppuccin().with_overrides(&custom);
+
+        assert_eq!(palette.tab_bg_color(), Color::Rgb(16, 17, 18));
+        assert_eq!(palette.tab_fg_color(), Color::Rgb(19, 20, 21));
+        assert_eq!(palette.divider_color(), Color::Rgb(22, 23, 24));
+    }
+
+    #[test]
+    fn chrome_colors_fall_back_to_existing_tokens() {
+        let palette = Palette::catppuccin();
+
+        assert_eq!(palette.tab_bg_color(), palette.accent);
+        assert_eq!(palette.tab_fg_color(), palette.panel_bg);
+        assert_eq!(palette.divider_color(), palette.surface_dim);
     }
 
     #[test]

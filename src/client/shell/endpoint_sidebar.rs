@@ -183,7 +183,7 @@ pub(super) fn render_collapsed(
             divider_y,
             workspace_area.width,
             &"─".repeat(workspace_area.width as usize),
-            Style::default().fg(palette.surface_dim),
+            Style::default().fg(palette.divider_color()),
         );
     }
     super::endpoint_agents::render_collapsed(

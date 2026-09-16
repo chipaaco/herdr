@@ -99,8 +99,8 @@ pub(crate) fn render_tab_bar(
         let rect = Rect::new(x, area.y, width, 1);
         let style = if tab.focused {
             let base = Style::default()
-                .fg(panel_contrast_fg(palette))
-                .bg(palette.accent);
+                .fg(palette.tab_fg_color())
+                .bg(palette.tab_bg_color());
             if tab.custom_label {
                 base.add_modifier(Modifier::BOLD)
             } else {

@@ -101,6 +101,8 @@ impl ThemeConfig {
 #[serde(default)]
 pub struct CustomThemeColors {
     pub accent: Option<String>,
+    pub tab_active_bg: Option<String>,
+    pub tab_active_fg: Option<String>,
     pub panel_bg: Option<String>,
     pub sidebar_bg: Option<String>,
     pub active_row_bg: Option<String>,
@@ -108,6 +110,7 @@ pub struct CustomThemeColors {
     pub surface0: Option<String>,
     pub surface1: Option<String>,
     pub surface_dim: Option<String>,
+    pub divider: Option<String>,
     pub overlay0: Option<String>,
     pub overlay1: Option<String>,
     pub text: Option<String>,
@@ -130,6 +133,8 @@ pub struct CustomThemeColors {
 #[serde(default)]
 pub struct ModeThemeColors {
     pub accent: Option<String>,
+    pub tab_active_bg: Option<String>,
+    pub tab_active_fg: Option<String>,
     pub panel_bg: Option<String>,
     pub sidebar_bg: Option<String>,
     pub active_row_bg: Option<String>,
@@ -137,6 +142,7 @@ pub struct ModeThemeColors {
     pub surface0: Option<String>,
     pub surface1: Option<String>,
     pub surface_dim: Option<String>,
+    pub divider: Option<String>,
     pub overlay0: Option<String>,
     pub overlay1: Option<String>,
     pub text: Option<String>,
@@ -339,6 +345,38 @@ active_row_bg = "#131415"
         assert_eq!(dark.panel_bg.as_deref(), Some("#0a0b0c"));
         assert_eq!(dark.sidebar_bg.as_deref(), Some("#0d0e0f"));
         assert_eq!(dark.active_row_bg.as_deref(), Some("#131415"));
+    }
+
+    #[test]
+    fn theme_custom_chrome_overrides_parse() {
+        let toml = r##"
+[theme]
+name = "terminal"
+
+[theme.custom]
+tab_active_bg = "#101112"
+tab_active_fg = "#131415"
+divider = "#161718"
+
+[theme.custom.light]
+tab_active_bg = "#202122"
+
+[theme.custom.dark]
+divider = "#232425"
+"##;
+        let config: Config = toml::from_str(toml).unwrap();
+        let custom = config.theme.custom.as_ref().unwrap();
+        assert_eq!(custom.tab_active_bg.as_deref(), Some("#101112"));
+        assert_eq!(custom.tab_active_fg.as_deref(), Some("#131415"));
+        assert_eq!(custom.divider.as_deref(), Some("#161718"));
+        assert_eq!(
+            custom.light.as_ref().unwrap().tab_active_bg.as_deref(),
+            Some("#202122")
+        );
+        assert_eq!(
+            custom.dark.as_ref().unwrap().divider.as_deref(),
+            Some("#232425")
+        );
     }
 
     #[test]
