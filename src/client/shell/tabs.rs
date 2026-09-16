@@ -23,10 +23,7 @@ pub(crate) fn render_tab_bar(
         .collect::<Vec<_>>();
     let desired_widths = tabs
         .iter()
-        .map(|tab| {
-            let label = tab_label(tab);
-            display_width(&label).saturating_add(4).max(MIN_TAB_WIDTH)
-        })
+        .map(|tab| tab_desired_width(&tab_label(tab)))
         .collect::<Vec<_>>();
     let content = tab_bar_content_area(snapshot, area);
     let mouse_chrome = config.mouse_capture;
@@ -379,9 +376,41 @@ fn tab_label(tab: &ClientShellTab) -> String {
     }
 }
 
+fn tab_desired_width(label: &str) -> u16 {
+    let label_width = display_width(label);
+    let mut width = label_width.saturating_add(4).max(MIN_TAB_WIDTH);
+    // Keep the label padding even so the label centers with equal space on both
+    // sides; an odd remainder would leave an extra column on the right.
+    if width.saturating_sub(label_width) % 2 != 0 {
+        width = width.saturating_add(1);
+    }
+    width
+}
+
 #[cfg(test)]
 mod tests {
-    use super::max_tab_scroll;
+    use super::{display_width, max_tab_scroll, tab_desired_width, MIN_TAB_WIDTH};
+
+    #[test]
+    fn tab_desired_width_keeps_label_padding_even() {
+        for label in ["1", "2", "3", "4", "10", "logs", "omarchy", "提交 herdr"] {
+            let label_width = display_width(label);
+            let width = tab_desired_width(label);
+            assert!(
+                width >= MIN_TAB_WIDTH,
+                "label {label:?} width {width} below minimum"
+            );
+            assert_eq!(
+                width.saturating_sub(label_width) % 2,
+                0,
+                "label {label:?} width {width} should pad evenly"
+            );
+        }
+        assert_eq!(tab_desired_width("1"), 9);
+        assert_eq!(tab_desired_width("3"), 9);
+        assert_eq!(tab_desired_width("12"), 8);
+        assert_eq!(tab_desired_width("omarchy"), 11);
+    }
 
     #[test]
     fn trailing_scroll_limit_accounts_for_full_widths_and_separators() {

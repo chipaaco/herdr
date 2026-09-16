@@ -198,6 +198,29 @@ fn inactive_auto_named_tab_label_does_not_stack_terminal_faint() {
 }
 
 #[test]
+fn single_digit_tab_label_is_centered_with_even_padding() {
+    let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
+    state.set_snapshot(Box::new(snapshot()));
+    state.set_pane_surface(surface());
+    let frame = state.compose(106, 20).expect("tab bar frame");
+    let rect = state
+        .hits
+        .tabs
+        .iter()
+        .find(|(_, tab_id)| tab_id == "tab_1")
+        .expect("focused tab hit")
+        .0;
+    let buffer = frame.to_ratatui_buffer().expect("tab bar buffer");
+    let cell: String = (rect.x..rect.x + rect.width)
+        .map(|x| buffer.cell((x, rect.y)).expect("tab cell").symbol())
+        .collect();
+    assert_eq!(
+        cell, "    1    ",
+        "tab label should be symmetrically padded"
+    );
+}
+
+#[test]
 fn configured_prefix_is_client_owned_and_renders_its_bar() {
     let config = toml::from_str::<Config>(
         r#"

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Fixed
+- Desktop tab labels now pad symmetrically, so single-character labels like `1` no longer sit one column off-center.
+
 ## [0.9.0] - 2026-09-07
 
 ### Added
